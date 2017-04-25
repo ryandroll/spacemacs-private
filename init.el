@@ -76,8 +76,8 @@ values."
      html
      javascript
      (typescript :variables
-                typescript-fmt-on-save nil
-                typescript-fmt-tool 'typescript-formatter)
+                 typescript-fmt-on-save nil
+                 typescript-fmt-tool 'typescript-formatter)
      emacs-lisp
      (clojure :variables clojure-enable-fancify-symbols t)
      racket
@@ -92,7 +92,10 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(sicp)
+   dotspacemacs-additional-packages
+   '(sicp
+     chinese-fonts-setup
+     )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    dotspacemacs-excluded-packages
@@ -359,21 +362,11 @@ values."
 
 (defun dotspacemacs/user-config ()
   ;;解决org表格里面中英文对齐的问题
-  (when (configuration-layer/layer-usedp 'chinese)
-    (when (and (spacemacs/system-is-mac) window-system)
-      (spacemacs//set-monospaced-font "Source Code Pro" "Hiragino Sans GB" 14 16)))
-
-  ;; Setting Chinese Font
-  (when (and (spacemacs/system-is-mswindows) window-system)
-    (setq ispell-program-name "aspell")
-    (setq w32-pass-alt-to-system nil)
-    (setq w32-apps-modifier 'super)
-    (dolist (charset '(kana han symbol cjk-misc bopomofo))
-      (set-fontset-font (frame-parameter nil 'font)
-                        charset
-                        (font-spec :family "Microsoft Yahei" :size 14))))
-
-  (fset 'evil-visual-update-x-selection 'ignore)
+  (require 'chinese-fonts-setup)
+  ;; 让 chinese-fonts-setup 随着 emacs 自动生效。
+  (chinese-fonts-setup-enable)
+  ;; 让 spacemacs mode-line 中的 Unicode 图标正确显示。
+  ;; (cfs-set-spacemacs-fallback-fonts)
 
   ;; force horizontal split window
   (setq split-width-threshold 120)
